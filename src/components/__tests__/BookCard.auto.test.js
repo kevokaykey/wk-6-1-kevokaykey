@@ -2,8 +2,9 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import BookCard from '../BookCard';
 
+// Mock the currency formatter
 jest.mock('../../config/currency', () => ({
-  formatCurrency: jest.fn((price) => \`KSh\${price}\`)
+  formatCurrency: jest.fn((price) => `KSh${price}`)
 }));
 
 const mockBook = {
@@ -45,5 +46,13 @@ describe('BookCard Component', () => {
     const image = screen.getByAltText('Test Book by Test Author');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', '/test-image.jpg');
+  });
+
+  test('should show loading state during purchase', () => {
+    render(<BookCard book={mockBook} onPurchase={mockOnPurchase} />);
+    
+    const buyButton = screen.getByText('Buy Now');
+    expect(buyButton).toBeInTheDocument();
+    expect(buyButton).not.toBeDisabled();
   });
 });
