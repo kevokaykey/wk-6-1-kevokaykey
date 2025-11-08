@@ -196,3 +196,19 @@ P3 (Stretch)
 
 
 
+### TRIO TESTER MARKDOWN
+## Testing
+
+### Automated Tests
+```bash
+# Run unit tests
+npm test
+
+# Run E2E tests
+npm run test:e2e
+
+# Run all tests
+npm run test:all
+
+# Run with coverage
+npm run test:coverage
