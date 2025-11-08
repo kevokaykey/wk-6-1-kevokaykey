@@ -23,3 +23,16 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+// cypress/support/commands.js
+
+Cypress.Commands.add('getByTestId', (testId) => {
+  return cy.get(`[data-testid="${testId}"]`);
+});
+
+Cypress.Commands.add('login', (email, password) => {
+  // Custom login command if needed later
+});
+
+Cypress.Commands.add('addBookToCart', () => {
+  cy.get('[data-testid="book-buy-button"]').first().click();
+});

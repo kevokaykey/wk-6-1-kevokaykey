@@ -15,3 +15,8 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands';
+
+// Global before each hook
+beforeEach(() => {
+  // Add global test setup here
+});
