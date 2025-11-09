@@ -29,9 +29,9 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to="/catalog" className="text-2xl font-bold">📚 BookStore</Link>
+            <Link to="/catalog" className="text-2xl font-bold" data-testid="nav-title">📚 BookStore</Link>
           </div>
-          
+
           <div className="flex-1 max-w-lg mx-8">
             <label htmlFor="navbar-search" className="sr-only">Search books</label>
             <input
@@ -47,9 +47,9 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Link to="/cart" aria-label={`Cart with ${cartCount} items`} className="relative">
+            <Link to="/cart" aria-label={`Cart with ${cartCount} items`} className="relative" data-testid="cart-link">
               <span className="text-lg">🛒</span>
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1 min-w-[1.25rem] text-center" aria-live="polite">{cartCount}</span>
+              <span data-testid="cart-count" className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1 min-w-[1.25rem] text-center" aria-live="polite">{cartCount}</span>
             </Link>
           </div>
         </div>

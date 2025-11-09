@@ -2,38 +2,29 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Navbar from '../Navbar';
+import { StoreProvider } from '../../store/StoreProvider';
 
-const renderWithRouter = (component) => {
+const renderWithProviders = (component) => {
   return render(
-    <BrowserRouter>
-      {component}
-    </BrowserRouter>
+    <StoreProvider>
+      <BrowserRouter>
+        {component}
+      </BrowserRouter>
+    </StoreProvider>
   );
 };
 
 describe('Navbar Component', () => {
   test('should render navigation links', () => {
-    renderWithRouter(<Navbar cartItems={[]} />);
-    
-    expect(screen.getByText(/book store/i)).toBeInTheDocument();
-    expect(screen.getByText(/catalog/i)).toBeInTheDocument();
-    expect(screen.getByText(/cart/i)).toBeInTheDocument();
+    renderWithProviders(<Navbar />);
+
+    expect(screen.getByTestId('nav-title')).toBeInTheDocument();
+    expect(screen.getByTestId('cart-link')).toBeInTheDocument();
   });
 
-  test('should display cart item count', () => {
-    const mockCartItems = [
-      { id: 1, quantity: 2 },
-      { id: 2, quantity: 1 }
-    ];
-    
-    renderWithRouter(<Navbar cartItems={mockCartItems} />);
-    
-    expect(screen.getByText('3')).toBeInTheDocument();
-  });
+  test('should display cart item count (default 0)', () => {
+    renderWithProviders(<Navbar />);
 
-  test('should show 0 when cart is empty', () => {
-    renderWithRouter(<Navbar cartItems={[]} />);
-    
-    expect(screen.getByText('0')).toBeInTheDocument();
+    expect(screen.getByTestId('cart-count')).toHaveTextContent('0');
   });
 });

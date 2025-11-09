@@ -1,0 +1,16 @@
+{
+    "books": [
+        {
+            "id": 1,
+            "title": "The Great Gatsby",
+            "author": "F. Scott Fitzgerald",
+            "price": 15.99
+        },
+        {
+            "id": 2,
+            "title": "To Kill a Mockingbird",
+            "author": "Harper Lee",
+            "price": 12.99
+        }
+    ]
+}

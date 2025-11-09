@@ -17,23 +17,25 @@ const renderWithProviders = (component) => {
 describe('Shopping Flow Integration', () => {
   test('should render the app without crashing', () => {
     renderWithProviders(<App />);
-    
-    // Flexible text matching for "book store"
-    const bookElement = screen.getByText(/book/i);
-    expect(bookElement).toBeInTheDocument();
+
+    // Prefer explicit test ids for stability
+    const navTitle = screen.getByTestId('nav-title');
+    expect(navTitle).toBeInTheDocument();
   });
 
   test('should display navigation elements', () => {
     renderWithProviders(<App />);
-    
-    // Check for common navigation text
-    const hasNav = screen.getByText(/catalog/i) || screen.getByText(/cart/i);
-    expect(hasNav).toBeInTheDocument();
+
+    // Check for explicit navigation test ids
+    const nav = screen.getByTestId('nav-title');
+    const cart = screen.getByTestId('cart-link');
+    expect(nav).toBeInTheDocument();
+    expect(cart).toBeInTheDocument();
   });
 
   test('basic app functionality', () => {
     renderWithProviders(<App />);
-    
+
     // Just verify the app renders something
     expect(screen.getByRole('main') || screen.getByRole('banner') || screen.getByText(/book/i)).toBeInTheDocument();
   });

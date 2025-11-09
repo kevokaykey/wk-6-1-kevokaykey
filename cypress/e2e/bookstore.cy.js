@@ -1,6 +1,10 @@
 describe('Book Store E2E Tests', () => {
   beforeEach(() => {
+    // Stub books API (if the app fetches remote data) to make E2E deterministic
+    cy.intercept('GET', '/api/books', { fixture: 'books.json' }).as('getBooks');
     cy.visit('/');
+    // wait for the stubbed request when applicable
+    cy.wait(200); // small wait to allow UI to render when no network call is present
   });
 
   it('should load the homepage', () => {
@@ -16,7 +20,7 @@ describe('Book Store E2E Tests', () => {
     // Test navigation links
     cy.contains('Cart').click();
     cy.url().should('include', '/cart');
-    
+
     cy.contains('Catalog').click();
     cy.url().should('include', '/catalog');
   });
