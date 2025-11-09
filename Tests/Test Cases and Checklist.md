@@ -1,11 +1,20 @@
 # Test Cases & Checklist Report
 
+## Reference
+This report is aligned with the technical issues and classifications documented in the [Defect Log Report](./Defect_Log.md). Test cases are designed to validate functional, structural, and execution aspects, and to catch regressions highlighted in the defect log.
+
+---
+
 ## Test Cases
 
-### 1. User Authentication
-**Test Case 1.1:** Login with valid credentials
-- Steps: Navigate to login page, enter valid username and password, click login
-- Expected: User is redirected to dashboard/home page
+### 1. Application Bootstrap & Mounting
+- **TC-1.1:** Verify root component (`App.js`) mounts without runtime exceptions.
+  - Steps: Start app, observe initial render, check for uncaught exceptions.
+  - Expected: `#root` element exists, Book Store header visible, no errors in console.
+  - Related Defect: D-001 (bootstrap failure)
+- **TC-1.2:** Validate static asset loading.
+  - Steps: Inspect network requests for 404s on assets in `public/`.
+  - Expected: All required assets load successfully.
 
 **Test Case 1.2:** Login with invalid credentials
 - Steps: Enter invalid username/password, click login
@@ -19,14 +28,14 @@
 - Steps: Login, reload page
 - Expected: User remains logged in
 
-### 2. Book Catalog
-**Test Case 2.1:** List all books
-- Steps: Navigate to catalog page
-- Expected: All available books are displayed
-
-**Test Case 2.2:** View book details
-- Steps: Click on a book
-- Expected: Book details page is shown with correct info
+### 2. Homepage (Catalog) Rendering
+- **TC-2.1:** Catalog page renders book list.
+  - Steps: Visit `/`, check for book cards.
+  - Expected: All books from data source are displayed.
+  - Related Defect: D-002 (homepage not rendering)
+- **TC-2.2:** Catalog page handles missing/invalid data gracefully.
+  - Steps: Simulate empty or malformed data.
+  - Expected: User-friendly error or empty state shown.
 
 **Test Case 2.3:** Search books
 - Steps: Enter search term, submit
@@ -40,14 +49,13 @@
 - Steps: Navigate between pages
 - Expected: Correct books are shown per page
 
-### 3. Shopping Cart
-**Test Case 3.1:** Add book to cart
-- Steps: Click 'Add to Cart' on a book
-- Expected: Book appears in cart, cart count updates
-
-**Test Case 3.2:** Remove book from cart
-- Steps: Remove book from cart
-- Expected: Book is removed, cart count updates
+### 3. Cart Operations
+- **TC-3.1:** Add book to cart triggers correct async state.
+  - Steps: Click 'Add to Cart', observe loading and completion.
+  - Expected: Cart updates, loading state clears.
+  - Related Defect: D-003 (loading state stuck)
+- **TC-3.2:** Remove book from cart updates UI and state.
+- **TC-3.3:** Cart persists across navigation and reload.
 
 **Test Case 3.3:** Update quantity
 - Steps: Change quantity in cart
@@ -143,16 +151,15 @@
 - Steps: Simulate multiple checkouts
 - Expected: No crashes, acceptable response time
 
-## Testing Checklist
+## Technical Testing Checklist
 
-- [ ] All major user flows covered by tests
-- [ ] Edge cases and error handling tested
-- [ ] UI tested on multiple devices/browsers
-- [ ] Security tests (authentication, authorization)
-- [ ] Performance tests (API, UI responsiveness)
-- [ ] Manual test scripts documented
-- [ ] Automated tests run and pass (Cypress, Jest)
-- [ ] Defect log updated for any issues found
-- [ ] Regression tests after bug fixes
-- [ ] Accessibility checks performed
-- [ ] Code coverage reviewed
+- [ ] All functional and structural flows validated (see Defect Log for coverage)
+- [ ] Automated tests (Cypress, Jest) executed and passed
+- [ ] Manual test scripts executed for UI/UX and edge cases
+- [ ] Error handling and async state transitions tested
+- [ ] Security: authentication and authorization enforced
+- [ ] Performance: page load and API response times measured
+- [ ] Accessibility: basic checks for ARIA, keyboard navigation
+- [ ] Code coverage reviewed for critical modules
+- [ ] Regression tests run after defect fixes
+- [ ] Evidence (screenshots, logs) attached for failed cases
