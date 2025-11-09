@@ -4,8 +4,12 @@ Date: November 9, 2025
 ## Summary
 This document is a technical defect log derived from automated test runs (Cypress) and targeted unit tests. Each defect entry includes: severity, priority, status, classification (functional / non-functional / structural), execution type (automated / manual), technical reproduction steps, expected vs actual behavior, root-cause analysis, workaround, and suggested fix. Evidence (screenshots / test traces) is linked where available.
 
----
 
+## Test Cases & Checklist Reference
+
+For a comprehensive list of test cases and the project testing checklist, see Test cases and Checklist.md
+
+This defect log focuses on issues found during automated and manual testing. Detailed test scenarios, acceptance criteria, and coverage are maintained in the separate report above.
 ## Defects (structured)
 
 | ID | Title | Severity | Priority | Status | Classification | Execution Type | Evidence |
@@ -242,29 +246,6 @@ lighthouse http://localhost:3000 --output html --output-path ./reports/lighthous
 
 ![Homepage failure screenshot](../cypress/screenshots/bookstore.cy.js/Book Store E2E Tests -- should load the homepage (failed).png)
 
-## How to reproduce locally (developer checklist)
-1. Clone the repo and install dependencies:
-
-```powershell
-cd "c:\\Users\\SHADRACK NANDWA\\Final\\wk-6-1-kevokaykey"
-npm install
-```
-
-2. Run unit tests (Jest):
-
-```powershell
-$env:CI='true'; npm test --silent
-```
-
-3. Run Cypress locally (open GUI):
-
-```powershell
-npx cypress open
-# or run headless
-npx cypress run --spec "cypress/e2e/bookstore.cy.js"
-```
-
-4. Re-run failing spec with network logs enabled and capture console errors.
 
 ## Actions taken / next steps
 1. Documented defects with expanded technical details, reproducible steps, test classification, and suggested fixes.
@@ -276,10 +257,5 @@ npx cypress run --spec "cypress/e2e/bookstore.cy.js"
 - Add a Cypress job in CI with network stubs for deterministic E2E runs.
 - Implement basic telemetry for checkout operations to detect stuck promises.
 
----
-
-If you want, I can:
-- add the unit test file to `src/__tests__` and run the test suite now, or
-- add a small Cypress stub to the existing spec to isolate the homepage rendering failure.
 
 -- End of report
