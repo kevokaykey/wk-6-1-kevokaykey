@@ -1,3 +1,171 @@
+# Early Test Scripts Report - Technical Implementation (Project-specific)
+
+## Overview
+This document is an augmented, project-specific version of the Early Test Scripts Report for the Book Store application contained in this repository. It uses live examples from the codebase (tests, components and services) and provides runnable instructions so maintainers can immediately execute and extend the test suite.
+
+Repository root references used in this report:
+- Application source: `src/`
+- Unit & integration tests: `src/__tests__/`, `src/components/__tests__/`
+- End-to-end (Cypress) tests: `cypress/e2e/`
+- Utility code referenced: `src/utils/`, `src/services/`
+
+Key success metrics (project targets):
+- Test Coverage: > 85% (goal)
+- Performance: FCP < 1.8s, LCP < 2.5s
+- Accessibility: WCAG 2.1 AA thresholds for key pages
+- Code Quality: maintainability index target > 75
+
+## Live examples and where they live in this project
+Below are concrete references to files and tests in this repository that show how the test strategy is already implemented:
+
+- Component under test: `src/components/BookCard.js`
+  - Component tests: `src/components/__tests__/BookCard.auto.test.js` and `src/components/__tests__/BookCard.test.j` (see `src/components/__tests__` for variants).
+  - Example checks: rendering title, author, price, cover image, "Add to cart" button, and out-of-stock handling.
+
+- App-level/unit tests: `src/__tests__/app.mount.test.js`, `src/App.test.js`
+  - These validate application bootstrap, routing and top-level rendering.
+
+- Utility tests: `src/__tests__/storage.test.js` and implementation in `src/utils/storage.js`
+  - These validate cart persistence and clearing behavior (save/load/clear operations).
+
+- Service tests: `src/services/CheckoutService.js` and test (referenced in docs) under `src/__tests__/`.
+  - Examples include payment info validation and order processing flows.
+
+- Integration / Shopping Flow: `src/__tests__/integration/shoppingFlow.test.js`
+  - Validates navigation, add-to-cart, cart updates, and checkout wiring between components.
+
+- End-to-end tests (Cypress): `cypress/e2e/bookstore.cy.js`, `cypress/e2e/ci-checkout.cy.js`, `cypress/e2e/ci-homepage.cy.js`
+  - These E2E tests stub backend calls via `cy.intercept(...)` and exercise the user journey from browsing to order confirmation.
+
+## 1. Manual Test Scripts - Implementation & Project Examples
+
+1.1 UI/UX Verification (pages & components)
+
+- Responsive layout: Verify `public/index.html` + CSS in `src/index.css` respond across breakpoints. Use the app in browser with devtools at 320/768/1025 widths.
+- Component rendering: `src/components/Navbar.js`, `src/components/BookList.js` and `src/components/BookCard.js` should render with expected semantic roles. Tests in `src/components/__tests__/` validate roles and ARIA attributes.
+- Accessibility checks: Run Axe or a11y linters against pages referenced by Cypress tests (see "How to run" below).
+
+1.2 Book Display and Interaction
+
+- Each `BookCard` should show title, author, price and image. The unit tests check `role='article'`, heading text (title), and `img` alt text.
+- Interactions like "Add to Cart" are validated both in component tests (mocking handlers) and in E2E tests (intercept POST /api/cart).
+
+1.3 Navigation
+
+- Use `src/App.js` and `src/index.js` to verify client-side routing. Unit/integration tests ensure links navigate to `CatalogPage`, `CartPage`, and `CheckoutPage`.
+
+## 2. Functional Flow Tests (Examples & Acceptance Criteria)
+
+2.1 Shopping Cart Flow
+
+- Add to Cart: Triggered from `BookCard` -> update in `StoreProvider` (`src/store/StoreProvider.js`). Acceptance: cart counter increments and cart page shows item.
+- Cart Management: Adjust quantity and remove items on `CartPage.js` (see `src/pages/CartPage.js`). Integration tests ensure totals adjust correctly.
+
+2.2 Checkout Process
+
+- Checkout page is implemented at `src/pages/CheckoutPage.js` and uses `src/services/CheckoutService.js` to validate/process orders.
+- Form validations covered by unit tests: required fields, email and postal code formats, and card validations (see tests under `src/__tests__/`).
+
+2.3 Error Handling & Special Cases
+
+- Tests should simulate network failures by stubbing responses in Cypress using `cy.intercept` and asserting UI displays error messages (Cypress E2E examples in `cypress/e2e/*`).
+
+## 3. Automated Test Scripts (Detailed and runnable)
+
+3.1 Unit & Integration (Jest + React Testing Library)
+
+- Location: `src/__tests__/` and `src/components/__tests__/`
+- Examples (already present in repo):
+  - `src/components/__tests__/BookCard.auto.test.js` — asserts semantic markup and handles add-to-cart/out-of-stock scenarios.
+  - `src/__tests__/storage.test.js` — checks `saveCartData`, `loadCartData`, `clearCartData` in `src/utils/storage.js`.
+
+3.2 Service tests
+
+- Validate functions in `src/services/CheckoutService.js` (payment info validation and `processOrder`) with Jest mocks for network calls.
+
+3.3 E2E (Cypress)
+
+- Location: `cypress/e2e/`
+- Representative file: `cypress/e2e/bookstore.cy.js` which:
+  - Intercepts `/api/books` with fixture `cypress/fixtures/books.json`
+  - Adds book to cart, opens cart page, proceeds to checkout and asserts confirmation.
+
+## 4. Test Coverage Matrix (project-specific)
+
+| Feature Area | Manual Tests | Unit Tests | Integration Tests | E2E Tests |
+|---|---:|---:|---:|---:|
+| UI Layout | ✓ | ✓ | - | ✓ |
+| Navigation | ✓ | - | ✓ | ✓ |
+| Cart Operations | ✓ | ✓ | ✓ | ✓ |
+| Checkout | ✓ | ✓ | ✓ | ✓ |
+| Admin / Pages | ✓ | ✓ | - | - |
+
+Notes: the matrix maps to existing files described above. Expand coverage by adding tests under `src/__tests__/integration/` and new Cypress specs.
+
+## 5. How to run tests (commands you can run locally)
+Open PowerShell at the repository root (where `package.json` is located). Example commands:
+
+```powershell
+# install dependencies (fresh)
+npm ci
+
+# run unit & integration tests (Jest)
+npm test
+
+# run Cypress GUI (developer exploratory)
+npx cypress open
+
+# run Cypress headless for a single spec (CI-friendly)
+npx cypress run --spec "cypress/e2e/bookstore.cy.js"
+```
+
+Notes:
+- `npm test` will run the Jest configuration present in the repo. If you need coverage output, use `npm test -- --coverage` or the script configured in `package.json`.
+- For CI, prefer `npx cypress run` to avoid opening the GUI.
+
+## 6. Example test excerpts and expectations (live references)
+
+- Component test (BookCard): asserts that the book card renders an article element with `data-testid="book-card"`, a heading matching the title, and an img with `alt` equal to "Cover of <title>". See `src/components/__tests__/BookCard.auto.test.js`.
+- E2E test (bookstore.cy.js): uses `cy.intercept('GET', '/api/books', { fixture: 'books.json' })` to control catalog data. Then it clicks add-to-cart and waits for `@addToCart` to return a 200 status. See `cypress/e2e/bookstore.cy.js`.
+
+## 7. Quality gates and quick validation steps
+
+Before merging changes into `main` we recommend these fast checks:
+
+- Build: ensure `npm test` (Jest) passes locally. (PASS/FAIL reported from your workstation.)
+- Lint/Typecheck: if project uses an ESLint or typechecker, run `npm run lint` or the configured script.
+- E2E Sanity: run the single Cypress spec headless (`npx cypress run --spec "cypress/e2e/bookstore.cy.js"`) to verify core flows.
+
+If any of the above fail, identify the failing tests quickly using Jest's `--watch` or by re-running Cypress with the `--headed` option to see UI failures.
+
+## 8. Next steps & recommended additions (practical, low-risk improvements)
+
+1) Add an explicit integration test for checkout edge cases (expired card, network failure) under `src/__tests__/integration/`.
+2) Add a small CI workflow (GitHub Actions) to run `npm ci && npm test && npx cypress run --spec "cypress/e2e/bookstore.cy.js"` on PRs against `main`.
+3) Add coverage thresholds in Jest config and fail CI if coverage drops below target (e.g., 85%).
+4) Add a visual regression job (Percy/Playwright Snapshot) for the `CatalogPage` and `BookCard`.
+
+## 9. Files referenced in this report (quick index)
+- `src/components/BookCard.js` — component under test
+- `src/components/__tests__/BookCard.auto.test.js` — component test examples
+- `src/__tests__/app.mount.test.js` — app bootstrap tests
+- `src/utils/storage.js` and `src/__tests__/storage.test.js` — cart persistence
+- `src/services/CheckoutService.js` — payment order processing code
+- `cypress/e2e/bookstore.cy.js` — core E2E that simulates a purchase
+- `cypress/fixtures/books.json` — fixture data used in E2E tests
+
+## 10. Completion summary
+
+What changed:
+- This file (`Tests/Early_Test_Scripts_Report.md`) was updated to include project-specific, actionable test guidance referencing files and tests already present in the repository. It contains runnable commands and recommended next steps.
+
+How it was verified:
+- Content references were derived from the repository layout and the test files under `src/` and `cypress/` that are part of this project.
+
+Next actions I will mark complete in the task list: finalize the todo items and leave recommendations for CI integration.
+
+---
+End of report.
 # Early Test Scripts Report - Technical Implementation
 
 ## Overview
