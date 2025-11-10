@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import BookList from '../BookList';
+import BookList from '../BookList.js';
 
 const mockBooks = [
   {

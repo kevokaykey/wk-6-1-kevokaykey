@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import BookCard from '../BookCard';
+import BookCard from '../BookCard.js';
 
 // Mock the currency formatter
 jest.mock('../../config/currency', () => ({

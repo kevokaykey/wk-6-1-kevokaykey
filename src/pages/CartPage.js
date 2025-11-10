@@ -1,55 +1,117 @@
-import React, { useContext } from 'react';
-import { StoreContext } from '../store/StoreProvider';
+import React from 'react';
+import { useStore } from '../store/StoreProvider.js';
 import { Link } from 'react-router-dom';
-import { formatCurrency } from '../config/currency';
 
 const CartPage = () => {
-  const { cart, updateCartQuantity, removeFromCart } = useContext(StoreContext);
+  const { state, removeFromCart, updateCartQuantity } = useStore();
+  
+  const total = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-  const subtotal = cart.reduce((sum, item) => sum + item.book.price * item.quantity, 0);
+  if (state.cart.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        <h1>Your Cart</h1>
+        <p>Your cart is empty</p>
+        <Link 
+          to="/catalog" 
+          style={{
+            display: 'inline-block',
+            padding: '0.5rem 1rem',
+            backgroundColor: '#007bff',
+            color: 'white',
+            textDecoration: 'none',
+            borderRadius: '4px',
+            marginTop: '1rem'
+          }}
+        >
+          Continue Shopping
+        </Link>
+      </div>
+    );
+  }
 
   return (
-    <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">Your Cart</h2>
-      {cart.length === 0 ? (
-        <div className="text-gray-600">Your cart is empty. <Link className="text-primary" to="/catalog">Continue shopping</Link></div>
-      ) : (
-        <div className="space-y-4">
-          {cart.map(({ id, book, quantity }) => (
-            <div key={id} className="flex items-center justify-between bg-white rounded-md p-4 shadow">
-              <div className="flex items-center gap-4">
-                <img src={book.image} alt={`${book.title} by ${book.author}`} className="w-16 h-16 object-cover rounded" />
-                <div>
-                  <div className="font-semibold">{book.title}</div>
-                  <div className="text-sm text-gray-600">by {book.author}</div>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <input
-                  type="number"
-                  min={1}
-                  value={quantity}
-                  onChange={(e) => updateCartQuantity(id, Math.max(1, Number(e.target.value) || 1))}
-                  className="w-20 border rounded px-2 py-1"
-                />
-                <div className="w-24 text-right font-semibold">{formatCurrency(book.price * quantity)}</div>
-                <button onClick={() => removeFromCart(id)} className="text-red-600 hover:underline">Remove</button>
-              </div>
+    <div>
+      <h1>Your Shopping Cart</h1>
+      
+      <div>
+        {state.cart.map(item => (
+          <div key={item.id} className="cart-item">
+            <div>
+              <h4>{item.title}</h4>
+              <p>by {item.author}</p>
             </div>
-          ))}
-          <div className="flex items-center justify-between border-t pt-4 mt-4">
-            <div className="text-xl font-bold">Subtotal</div>
-            <div className="text-xl font-bold">{formatCurrency(subtotal)}</div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <button
+                  onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
+                  style={{
+                    padding: '0.25rem 0.5rem',
+                    border: '1px solid #ddd',
+                    backgroundColor: 'white',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  -
+                </button>
+                <span style={{ minWidth: '30px', textAlign: 'center' }}>
+                  {item.quantity}
+                </span>
+                <button
+                  onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
+                  style={{
+                    padding: '0.25rem 0.5rem',
+                    border: '1px solid #ddd',
+                    backgroundColor: 'white',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  +
+                </button>
+              </div>
+              
+              <div style={{ minWidth: '80px', textAlign: 'right' }}>
+                <strong>${(item.price * item.quantity).toFixed(2)}</strong>
+              </div>
+              
+              <button
+                onClick={() => removeFromCart(item.id)}
+                style={{
+                  padding: '0.5rem',
+                  backgroundColor: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Remove
+              </button>
+            </div>
           </div>
-          <div className="text-right">
-            <Link to="/checkout" className="inline-block bg-primary text-white px-6 py-3 rounded-lg">Proceed to Checkout</Link>
-          </div>
-        </div>
-      )}
-    </main>
+        ))}
+      </div>
+      
+      <div style={{ marginTop: '2rem', padding: '1rem', borderTop: '1px solid #ddd' }}>
+        <h3>Total: ${total.toFixed(2)}</h3>
+        <Link 
+          to="/checkout" 
+          style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: '#28a745',
+            color: 'white',
+            textDecoration: 'none',
+            borderRadius: '4px'
+          }}
+        >
+          Proceed to Checkout
+        </Link>
+      </div>
+    </div>
   );
 };
 
 export default CartPage;
-
-

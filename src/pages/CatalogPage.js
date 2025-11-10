@@ -1,53 +1,57 @@
-import React, { useMemo, useState, useContext } from 'react';
-import BookList from '../components/BookList';
-import { books } from '../data/books';
-import { StoreContext } from '../store/StoreProvider';
+import React from 'react';
+import { useStore } from '../store/StoreProvider.js';
 
 const CatalogPage = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const { addToCart } = useContext(StoreContext);
-
-  const filteredBooks = useMemo(() => {
-    if (!searchQuery.trim()) return books;
-    const query = searchQuery.toLowerCase();
-    return books.filter((book) =>
-      book.title.toLowerCase().includes(query) ||
-      book.author.toLowerCase().includes(query) ||
-      book.description.toLowerCase().includes(query)
-    );
-  }, [searchQuery]);
-
-  const handlePurchase = async (book) => {
-    // For now, add to cart instead of immediate Paystack
-    addToCart(book, 1);
-  };
+  const { state, addToCart } = useStore();
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Our Collection</h2>
-            <p className="text-gray-600">Discover amazing books from renowned authors</p>
+    <div>
+      <h1>Book Catalog</h1>
+      <p>Browse our collection of books</p>
+      
+      <div className="book-grid">
+        {state.books.map(book => (
+          <div key={book.id} className="book-card">
+            <div style={{
+              width: '100%',
+              height: '200px',
+              backgroundColor: '#f5f5f5',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1rem',
+              fontSize: '3rem',
+              borderRadius: '4px'
+            }}>
+              📚
+            </div>
+            
+            <h3>{book.title}</h3>
+            <p>by {book.author}</p>
+            <p><strong>${book.price}</strong></p>
+            <p style={{ color: book.inStock ? 'green' : 'red' }}>
+              {book.inStock ? 'In Stock' : 'Out of Stock'}
+            </p>
+            
+            <button
+              onClick={() => addToCart(book)}
+              disabled={!book.inStock}
+              style={{
+                padding: '0.5rem 1rem',
+                backgroundColor: book.inStock ? '#007bff' : '#6c757d',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: book.inStock ? 'pointer' : 'not-allowed'
+              }}
+            >
+              {book.inStock ? 'Add to Cart' : 'Out of Stock'}
+            </button>
           </div>
-          <div className="w-full sm:w-80">
-            <label htmlFor="search" className="sr-only">Search books</label>
-            <input
-              id="search"
-              type="text"
-              placeholder="Search books..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary-light"
-            />
-          </div>
-        </div>
+        ))}
       </div>
-      <BookList books={filteredBooks} onPurchase={handlePurchase} />
-    </main>
+    </div>
   );
 };
 
 export default CatalogPage;
-
-

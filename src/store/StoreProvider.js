@@ -1,85 +1,78 @@
-import React, { createContext, useCallback, useMemo, useState, useEffect } from 'react';
-import { safeGetItem, safeSetItem } from '../utils/storage';
+import React from 'react';
+import { bookData } from '../data/books.js';
 
-export const StoreContext = createContext(null);
+const StoreContext = React.createContext();
 
-const STORAGE_KEYS = {
-  cart: 'app.cart',
-  orders: 'app.orders',
-  coupons: 'app.coupons',
-  notifications: 'app.notifications',
-  user: 'app.user',
+export const useStore = () => {
+  const context = React.useContext(StoreContext);
+  if (!context) {
+    throw new Error('useStore must be used within a StoreProvider');
+  }
+  return context;
 };
 
-export const StoreProvider = ({ children }) => {
-  const [cart, setCart] = useState(() => safeGetItem(STORAGE_KEYS.cart, []));
-  const [orders, setOrders] = useState(() => safeGetItem(STORAGE_KEYS.orders, []));
-  const [coupons, setCoupons] = useState(() => safeGetItem(STORAGE_KEYS.coupons, []));
-  const [notifications, setNotifications] = useState(() => safeGetItem(STORAGE_KEYS.notifications, []));
-  const [user, setUser] = useState(() => safeGetItem(STORAGE_KEYS.user, { role: 'user' }));
-  const [storageErrors, setStorageErrors] = useState([]);
+const StoreProvider = ({ children }) => {
+  const [state, setState] = React.useState({
+    user: null,
+    cart: [],
+    books: bookData,
+    orders: []
+  });
 
-  // Persist changes with graceful failure collection
-  useEffect(() => {
-    if (!safeSetItem(STORAGE_KEYS.cart, cart)) setStorageErrors((e) => [...e, 'cart']);
-  }, [cart]);
-  useEffect(() => {
-    if (!safeSetItem(STORAGE_KEYS.orders, orders)) setStorageErrors((e) => [...e, 'orders']);
-  }, [orders]);
-  useEffect(() => {
-    if (!safeSetItem(STORAGE_KEYS.coupons, coupons)) setStorageErrors((e) => [...e, 'coupons']);
-  }, [coupons]);
-  useEffect(() => {
-    if (!safeSetItem(STORAGE_KEYS.notifications, notifications)) setStorageErrors((e) => [...e, 'notifications']);
-  }, [notifications]);
-  useEffect(() => {
-    if (!safeSetItem(STORAGE_KEYS.user, user)) setStorageErrors((e) => [...e, 'user']);
-  }, [user]);
-
-  const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
-
-  const addToCart = useCallback((book, quantity = 1) => {
-    setCart((prev) => {
-      const existing = prev.find((i) => i.id === book.id);
-      if (existing) {
-        return prev.map((i) => (i.id === book.id ? { ...i, quantity: i.quantity + quantity } : i));
+  const value = {
+    state,
+    setState,
+    addToCart: (book) => {
+      setState(prev => {
+        const existingItem = prev.cart.find(item => item.id === book.id);
+        if (existingItem) {
+          return {
+            ...prev,
+            cart: prev.cart.map(item =>
+              item.id === book.id 
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            )
+          };
+        } else {
+          return {
+            ...prev,
+            cart: [...prev.cart, { ...book, quantity: 1 }]
+          };
+        }
+      });
+    },
+    removeFromCart: (bookId) => {
+      setState(prev => ({
+        ...prev,
+        cart: prev.cart.filter(item => item.id !== bookId)
+      }));
+    },
+    updateCartQuantity: (bookId, quantity) => {
+      if (quantity <= 0) {
+        setState(prev => ({
+          ...prev,
+          cart: prev.cart.filter(item => item.id !== bookId)
+        }));
+      } else {
+        setState(prev => ({
+          ...prev,
+          cart: prev.cart.map(item =>
+            item.id === bookId ? { ...item, quantity } : item
+          )
+        }));
       }
-      return [...prev, { id: book.id, book, quantity }];
-    });
-  }, []);
+    },
+    clearCart: () => {
+      setState(prev => ({ ...prev, cart: [] }));
+    }
+  };
 
-  const updateCartQuantity = useCallback((id, quantity) => {
-    setCart((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)));
-  }, []);
-
-  const removeFromCart = useCallback((id) => {
-    setCart((prev) => prev.filter((i) => i.id !== id));
-  }, []);
-
-  const clearCart = useCallback(() => setCart([]), []);
-
-  const value = useMemo(
-    () => ({
-      cart,
-      cartCount,
-      addToCart,
-      updateCartQuantity,
-      removeFromCart,
-      clearCart,
-      orders,
-      setOrders,
-      coupons,
-      setCoupons,
-      notifications,
-      setNotifications,
-      user,
-      setUser,
-      storageErrors,
-    }),
-    [cart, cartCount, addToCart, updateCartQuantity, removeFromCart, clearCart, orders, coupons, notifications, user, storageErrors]
+  return (
+    <StoreContext.Provider value={value}>
+      {children}
+    </StoreContext.Provider>
   );
-
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
 };
 
-
+export default StoreProvider;

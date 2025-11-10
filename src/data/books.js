@@ -1,51 +1,53 @@
-export const books = [
+// Book data for the bookstore app
+export const bookData = [
   {
     id: 1,
     title: "The Great Gatsby",
     author: "F. Scott Fitzgerald",
-    price: 15.99,
-    image: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400",
-    description: "A classic American novel about the Jazz Age"
+    price: 12.99,
+    image: "/api/placeholder/200/300",
+    category: "Fiction",
+    description: "A classic novel of the Jazz Age",
+    inStock: true
   },
   {
     id: 2,
-    title: "To Kill a Mockingbird",
+    title: "To Kill a Mockingbird", 
     author: "Harper Lee",
-    price: 12.99,
-    image: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=400",
-    description: "A powerful story of racial injustice"
+    price: 14.99,
+    image: "/api/placeholder/200/300",
+    category: "Fiction",
+    description: "A story of racial injustice and childhood innocence",
+    inStock: true
   },
   {
     id: 3,
     title: "1984",
     author: "George Orwell",
-    price: 14.99,
-    image: "https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?w=400",
-    description: "A dystopian social science fiction novel"
+    price: 10.99,
+    image: "/api/placeholder/200/300",
+    category: "Dystopian",
+    description: "A dystopian social science fiction novel",
+    inStock: true
   },
   {
     id: 4,
     title: "Pride and Prejudice",
     author: "Jane Austen",
     price: 11.99,
-    image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400",
-    description: "A romantic novel of manners"
+    image: "/api/placeholder/200/300",
+    category: "Romance",
+    description: "A romantic novel of manners",
+    inStock: false
   },
   {
     id: 5,
-    title: "The Catcher in the Rye",
-    author: "J.D. Salinger",
-    price: 13.99,
-    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400",
-    description: "A controversial novel of teenage rebellion"
-  },
-  {
-    id: 6,
-    title: "Lord of the Rings",
-    author: "J.R.R. Tolkien",
-    price: 19.99,
-    image: "https://images.unsplash.com/photo-1506260408121-e353d10b87c7?w=400",
-    description: "An epic high fantasy adventure"
+    title: "The Hobbit",
+    author: "J.R.R. Tolkien", 
+    price: 16.99,
+    image: "/api/placeholder/200/300",
+    category: "Fantasy",
+    description: "A fantasy novel and children's book",
+    inStock: true
   }
 ];
-

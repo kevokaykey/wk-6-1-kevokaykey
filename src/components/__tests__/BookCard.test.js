@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import BookCard from '../BookCard';
-import { createBook } from '../../test-utils';
+import BookCard from '../BookCard.js';
+import { createBook } from '../../test-utils.js';
 
 const mockBook = createBook({
   title: 'Test Book',

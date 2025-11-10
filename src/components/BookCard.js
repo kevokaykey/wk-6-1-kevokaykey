@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { formatCurrency } from '../config/currency';
+import { formatCurrency } from '../config/currency.js';
 
 const BookCard = ({ book, onPurchase }) => {
   const [loading, setLoading] = useState(false);

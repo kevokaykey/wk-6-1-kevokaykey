@@ -1,5 +1,5 @@
 import React from 'react';
-import BookCard from './BookCard';
+import BookCard from './BookCard.js';
 
 const BookList = ({ books, onPurchase }) => {
   if (books.length === 0) {

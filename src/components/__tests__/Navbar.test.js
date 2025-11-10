@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import Navbar from '../Navbar';
-import { StoreProvider } from '../../store/StoreProvider';
+import Navbar from '../Navbar.js';
+import { StoreProvider } from '../../store/StoreProvider.js';
 
 const renderWithProviders = (component) => {
   return render(
