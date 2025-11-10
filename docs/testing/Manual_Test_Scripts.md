@@ -1,5 +1,25 @@
 # Book Store App - Manual Test Scripts
 
+## 🚀 QUICK START GUIDE
+**Time:** 5-10 minutes  
+**Frequency:** Daily / After deployments
+
+### 5-Minute Smoke Test
+- [ ] **App Launch**: http://localhost:3000 loads
+- [ ] **Error Check**: No red errors in browser console (F12 → Console)
+- [ ] **Navigation**: Click between main pages works
+- [ ] **Book Display**: Books show titles and prices
+- [ ] **Add to Cart**: "Buy Now" buttons work
+- [ ] **Cart Update**: Cart counter increases
+
+### Critical Path Validation
+**Test these weekly:**
+1. **Happy Path**: Browse → Add Book → View Cart → Checkout
+2. **Multiple Items**: Add 3 books → Verify cart total
+3. **Empty State**: Clear cart → Confirm empty message
+4. **Payment Test**: Complete checkout with test card
+
+---
 ## Test Environment Setup
 - URL: http://localhost:3000
 - Browser: Chrome/Firefox/Safari
@@ -76,3 +96,34 @@
 
 **Test Payment:**
 - Use test card in Paystack modal
+---
+
+## 🎯 EXPLORATORY TESTING
+
+### ET-001: Error Handling
+**Steps:**
+1. Try checkout with empty cart
+2. Enter invalid email in checkout
+3. Refresh during payment process
+**Expected:** Clear errors, no crashes
+
+### ET-002: Mobile Responsive
+**Steps:**
+1. Open Chrome DevTools (F12)
+2. Toggle device toolbar
+3. Test mobile (375px) and tablet (768px)
+**Expected:** Readable content, proper touch targets
+
+### ET-003: Performance Check
+**Steps:**
+1. Open Network tab in DevTools
+2. Reload with cache disabled (Ctrl+Shift+R)
+3. Note load times
+**Expected:** <3 second load, no large files
+
+## 📊 DEFECT REPORTING TEMPLATE
+
+## 🔄 TESTING SCHEDULE
+- **Daily** (5 min): Quick smoke test  
+- **Weekly** (15 min): Full manual suite
+- **Per Release** (30 min): Comprehensive + exploratory
