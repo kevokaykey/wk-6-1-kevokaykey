@@ -1,13 +1,22 @@
 {
   "name": "wk-6-1-project",
   "version": "1.0.0",
-  "type": "module",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "setup:hooks": "node scripts/git-hooks/setup-hooks.cjs",
-     "report": "node scripts/generate-test-report.cjs",
     "test:early": "node scripts/early-detection/pre-commit-check.cjs",
     "test:unit": "react-scripts test src/__tests__/unit/",
     "test:integration": "react-scripts test src/__tests__/integration/",
@@ -15,11 +24,14 @@
     "test:all": "npm run test:unit && npm run test:integration",
     "test:manual": "echo 'Run manual tests from docs/testing/MANUAL_TESTING.md'",
     "validate": "npm run test:early && npm run test:all",
+    "report": "node scripts/generate-test-report.cjs",
+    "setup:hooks": "node scripts/git-hooks/setup-hooks.cjs",
     "eject": "react-scripts eject"
   },
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.30.1",
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
