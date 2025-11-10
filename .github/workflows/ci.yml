@@ -33,8 +33,8 @@ jobs:
           name: coverage-report
           path: coverage
 
-  cypress-e2e:
-    name: Cypress E2E
+  e2e:
+    name: Cypress E2E (build & serve)
     runs-on: ubuntu-latest
     needs: test
     steps:
@@ -50,10 +50,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Cypress tests (headless)
-        run: npx cypress run --spec "cypress/e2e/**/*.cy.js"
+      - name: Build production bundle
+        run: npm run build
 
-      - name: Upload Cypress videos/screenshots (if any)
+      - name: Serve production build
+        # npx http-server or serve will be installed via npx; run in background
+        run: npx http-server ./build -p 3000 -c-1 &
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000
+
+      - name: Run Cypress tests (headless against built app)
+        run: npx cypress run --config baseUrl=http://localhost:3000 --spec "cypress/e2e/**/*.cy.js"
+
+      - name: Upload Cypress artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -61,126 +71,3 @@ jobs:
           path: |
             cypress/videos
             cypress/screenshots
-name: CI - Test Suite
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  unit:
-    name: Unit Tests & Coverage
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run Jest with coverage and JUnit reporter
-        env:
-          JEST_JUNIT_OUTPUT_DIR: junit
-          JEST_JUNIT_OUTPUT: junit/jest-junit.xml
-        run: |
-          npx jest --coverage --runInBand --reporters=default --reporters=jest-junit || true
-
-      - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage-report
-          path: coverage
-
-      - name: Upload junit artifact
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: junit-report
-          path: junit
-
-  e2e:
-    name: Cypress E2E
-    runs-on: ubuntu-latest
-    needs: unit
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Start dev server
-        run: |
-          npm start &
-          npx wait-on http://localhost:3000
-
-      - name: Run Cypress tests (JUnit)
-        run: |
-          npx cypress run --spec "cypress/e2e/ci-*.cy.js" --reporter mocha-junit-reporter --reporter-options mochaFile=cypress/results/junit/test-results-[hash].xml || true
-
-      - name: Run Cypress tests (HTML - mochawesome)
-        run: |
-          npx cypress run --spec "cypress/e2e/ci-*.cy.js" --reporter mochawesome --reporter-options reportDir=cypress/results/mochawesome,reportFilename=report || true
-
-      - name: Upload Cypress artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: cypress-artifacts
-          path: |
-            cypress/results/
-            cypress/screenshots/
-            cypress/videos/
-
-  perf:
-    name: Performance (k6)
-    runs-on: ubuntu-latest
-    needs: unit
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Start dev server for perf
-        run: |
-          npm start &
-          npx wait-on http://localhost:3000
-
-      - name: Install k6
-        uses: grafana/setup-k6@v4
-        with:
-          k6-version: '0.45.0'
-
-      - name: Run k6 baseline
-        run: |
-          k6 run performance/k6-baseline.js --summary-export=perf-summary.json || true
-
-      - name: Upload k6 results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: k6-results
-          path: perf-summary.json

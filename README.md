@@ -1,5 +1,7 @@
 # Book Store App
 
+[![CI](https://github.com/kevokaykey/wk-6-1-kevokaykey/actions/workflows/ci.yml/badge.svg)](https://github.com/kevokaykey/wk-6-1-kevokaykey/actions)
+
 A React book store with cart, basic checkout scaffolding, configurable Paystack integration, routing, and localStorage persistence.
 
 ## Features
