@@ -29,10 +29,23 @@ Cypress.Commands.add('getByTestId', (testId) => {
   return cy.get(`[data-testid="${testId}"]`);
 });
 
+Cypress.Commands.add('getBySel', (selector) => {
+  // Alias to data-testid to support both patterns
+  return cy.get(`[data-testid="${selector}"]`);
+});
+
 Cypress.Commands.add('login', (email, password) => {
   // Custom login command if needed later
 });
 
 Cypress.Commands.add('addBookToCart', () => {
   cy.get('[data-testid="book-buy-button"]').first().click();
+});
+
+Cypress.Commands.add('fillCheckoutForm', ({ email, name, address }) => {
+  cy.getBySel('checkout-form').within(() => {
+    if (email) cy.get('input[name="email"]').clear().type(email);
+    if (name) cy.get('input[name="name"]').clear().type(name);
+    if (address) cy.get('input[name="address"]').clear().type(address);
+  });
 });
