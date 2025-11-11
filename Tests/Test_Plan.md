@@ -1,108 +1,65 @@
-# 🧪 **Test Plan – Skill-Building Web App**
-
-**Project:** Skill-Building Platform for Unemployed Youth  
+# docs/testing/TEST_PLAN.md
+# React Bookstore Application - Test Plan
 **Version:** 1.0  
-**Date:** November 4, 2025  
-**Prepared by:** Kevin, Eunice, and Nandwa  
+**Date:** $(11/11/2025)  
+**Status:** ACTIVE
 
----
+## 1. EXECUTIVE SUMMARY
+- **Application:** React Bookstore
+- **Test Environment:** Localhost:3000
+- **Test Approach:** Hybrid (Automated + Manual)
+- **Risk Level:** MEDIUM
 
-## 1. 🎯 Objective and Scope
+## 2. TEST OBJECTIVES
+- [ ✅] Validate core user journeys
+- [✅ ] Ensure payment processing reliability
+- [ ✅] Verify responsive design across devices
+- [✅ ] Confirm data persistence and integrity
 
-The objective of this test plan is to ensure that the **Skill-Building Web App** functions as intended — enabling users to register, log in, take lessons, and track their progress accurately and efficiently.  
+## 3. TEST SCOPE
+### IN SCOPE
+- User authentication
+- Book browsing and search
+- Shopping cart management
+- Checkout process
+- Order management
 
-The scope covers **functional**, **usability**, and **compatibility** testing of the **React frontend** and **FastAPI backend**, executed in a local environment before deployment.  
+### OUT OF SCOPE
+- Payment gateway integration (mocked)
+- Email notification system
+- Third-party analytics
+- Admin dashboard
 
----
+## 4. TEST STRATEGY
+### 4.1 Automated Testing
+- Unit Tests: Jest + React Testing Library
+- Integration Tests: Cypress Component Testing
+- E2E Tests: Cypress (6 suites completed)
 
-## 2. ✅ In-Scope Features (Mapped to Functional Requirement Codes)
+### 4.2 Manual Testing
+- Exploratory testing sessions
+- Usability testing
+- Cross-browser testing
+- Mobile device testing
 
-| Feature | Description | FR Code |
-|----------|--------------|---------|
-| User Authentication | Sign up, login, logout using JWT tokens | FR-01 |
-| Lessons Management | View, enroll in, and complete lessons | FR-02 |
-| Progress Tracking | Track completed lessons and progress status | FR-03 |
-| Dashboard | Display personalized progress overview | FR-04 |
-| Admin Panel (optional) | Manage users and content | FR-05 |
+## 5. ENVIRONMENT SETUP
+### Development
+- URL: http://localhost:3000
+- Database: Mocked/JSON
+- APIs: Mocked with Cypress
 
----
+### Staging
+- URL: [To be configured]
+- Database: Test instance
+- APIs: Development endpoints
 
-## 3. 🚫 Out-of-Scope
+## 6. ENTRY/EXIT CRITERIA
+### Entry Criteria
+- [ ✅] Code deployed to test environment
+- [✅ ] Test data prepared
+- [ ✅] Test environment stable
 
-- Integration with external payment APIs  
-- Mobile responsiveness testing (desktop browsers only)  
-- Production deployment configuration  
-- Load testing for >50 concurrent users  
-
----
-
-## 4. 🌐 Environments
-
-| Environment Aspect | Details |
-|--------------------|----------|
-| **Operating Systems** | Windows 10, Ubuntu 22.04 |
-| **Browsers (latest versions)** | Google Chrome, Mozilla Firefox |
-| **Screen Sizes** | 1366x768, 1920x1080 |
-| **Network Conditions** | Normal (Wi-Fi), Throttled 3G for performance tests |
-| **Backend Environment** | FastAPI running locally on `localhost:8000` |
-| **Frontend Environment** | React app running on `localhost:3000` |
-| **Database** | SQLite (local dev setup) |
-
----
-
-## 5. 🧰 Tools
-
-| Tool | Purpose |
-|------|----------|
-| **Postman** | API endpoint validation |
-| **PyTest / Selenium** | Automated test scripts |
-| **Lighthouse** | Performance and accessibility audits |
-| **Chrome DevTools** | Network throttling, console logs |
-| **Axe DevTools (extension)** | Accessibility testing |
-| **Screen Reader (NVDA/VoiceOver)** | Accessibility verification |
-| **GitHub Issues** | Defect tracking and triage |
-| **Google Docs / Sheets** | Test documentation and reporting |
-
----
-
-## 6. ⚠️ Risks and Mitigations
-
-| Risk | Impact | Mitigation |
-|------|---------|-------------|
-| Delayed feature implementation | High | Start test design in parallel with dev progress |
-| Inconsistent environments across testers | Medium | Use shared `.env` and setup scripts |
-| Unstable backend endpoints | Medium | Mock API responses for test continuity |
-| Limited accessibility coverage | Low | Use Lighthouse + manual screen reader checks |
-
----
-
-## 7. 🔍 Test Types
-
-| Test Type | Description | Tools/Methods |
-|------------|-------------|----------------|
-| **Functional Testing** | Verify that all user stories meet expected outcomes | Manual + PyTest |
-| **Accessibility (a11y)** | Validate compliance with WCAG 2.1 AA | Axe DevTools, Screen Reader |
-| **Performance** | Assess page load time and API response | Lighthouse, DevTools |
-| **Compatibility** | Cross-browser and device consistency | Chrome, Firefox |
-| **Hygiene/Smoke** | Quick sanity check after each build | Manual execution checklist |
-
----
-
-## 8. 🚪 Entry and Exit Criteria
-
-### **Entry Criteria**
-- All core features implemented in the development branch  
-- Test environments configured and accessible  
-- Test cases approved and ready for execution  
-- API endpoints verified via Postman  
-
-### **Exit Criteria**
-- All functional test cases executed  
-- Critical and high-severity bugs resolved or accepted with justification  
-- Accessibility and performance tests completed  
-- Test summary report submitted and approved  
-
----
-
-✅ **End of Test Plan**  
-**Next Step:** Begin *Phase 2 – Test Design & Early Execution (Due: Nov 11, 2025)*
+### Exit Criteria
+- [✅ ] 95% test cases executed
+- [✅ ] Critical defects resolved
+- [ ✅] Performance benchmarks met

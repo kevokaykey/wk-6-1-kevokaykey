@@ -5,12 +5,12 @@
 **Frequency:** Daily / After deployments
 
 ### 5-Minute Smoke Test
-- [ ] **App Launch**: http://localhost:3000 loads
-- [ ] **Error Check**: No red errors in browser console (F12 → Console)
-- [ ] **Navigation**: Click between main pages works
-- [ ] **Book Display**: Books show titles and prices
-- [ ] **Add to Cart**: "Buy Now" buttons work
-- [ ] **Cart Update**: Cart counter increases
+- [✅ ] **App Launch**: http://localhost:3000 loads
+- [✅ ] **Error Check**: No red errors in browser console (F12 → Console)
+- [ ✅] **Navigation**: Click between main pages works
+- [✅ ] **Book Display**: Books show titles and prices
+- [ ✅] **Add to Cart**: "Buy Now" buttons work
+- [ ✅] **Cart Update**: Cart counter increases
 
 ### Critical Path Validation
 **Test these weekly:**
@@ -22,7 +22,7 @@
 ---
 ## Test Environment Setup
 - URL: http://localhost:3000
-- Browser: Chrome/Firefox/Safari
+- Browser: Chrome/Firefox/Edge
 - Test User: Any guest user
 
 ## Test Cases
