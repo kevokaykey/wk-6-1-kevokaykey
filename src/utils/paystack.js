@@ -1,6 +1,6 @@
 // Paystack payment integration
 // Read from environment variable
-export const PAYSTACK_PUBLIC_KEY = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY || 'pk_test_your_paystack_public_key_here';
+export const PAYSTACK_PUBLIC_KEY = process.env.REACT_APP_PAYSTACK_PUBLIC_KEY || 'pk_test_65bd9bec2c6cfcb3d95cd640b0b55fc399fbad94';
 import { APP_CURRENCY, SUPPORTED_CURRENCIES } from '../config/currency';
 
 const isValidPublicKey = (key) => /^pk_(test|live)_/.test(key);
